@@ -1,6 +1,13 @@
 {
   "source": "./agents",
   "destination": "~/.claude/agents",
+  "commands": {
+    "source": "./commands",
+    "destination": "~/.claude/commands",
+    "whitelist": [
+      "speckit.transform.md"
+    ]
+  },
   "whitelist": [
     "backend-architect.md",
     "frontend-developer.md",

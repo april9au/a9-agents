@@ -400,17 +400,40 @@ backend-architect → security-auditor → Validated implementation
 2. **Iterative refinement** - Use agent feedback to improve requirements
 3. **Complexity matching** - Align task complexity with agent capabilities
 
+## Slash Commands
+
+In addition to subagents, this repository ships a set of **slash commands** — reusable prompt workflows invoked directly in Claude Code via `/command-name`. Commands are synced from the `commands/` directory to `~/.claude/commands` by the same `sync-agents.js` script, using the `commands.whitelist` in `agents-config.json`.
+
+### SpecKit — Feature Specification Workflow
+
+A suite of commands for authoring and managing feature specifications through their full lifecycle:
+
+| Command | Description |
+|---------|-------------|
+| `/speckit.transform` | Transform a `spec.md` into a structured `spec.json` following the canonical JSON schema |
+
+### Installing Commands
+
+Commands are synced automatically when you run the standard sync script:
+
+```bash
+node sync-agents.js
+```
+
+Only commands listed in the `commands.whitelist` array in `agents-config.json` are installed to `~/.claude/commands`.
+
 ## Repository Structure
 
 ```
 agents/                      # All agent definitions from upstream
+commands/                    # Slash command definitions (e.g. speckit.*)
 mcps/                        # MCP configuration files
 tools/                       # Optional Claude Code tools
 workflows/                   # Example multi-agent workflows
 examples/                    # Usage examples
 
-agents-config.json           # Organization-wide agent whitelist
-sync-agents.js              # Agent sync script
+agents-config.json           # Organization-wide agent and command whitelist
+sync-agents.js              # Agent and command sync script
 install-mcps.js             # MCP installation script
 ```
 

@@ -77,71 +77,89 @@ async function syncAgents() {
   console.log(`  Destination: ${destDir}`);
   console.log(`  Agents:      ${whitelist.length} whitelisted\n`);
 
-  // Validate source directory
-  if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-    log(colors.red, '✗', `Source directory '${sourceDir}' not found`);
-    process.exit(1);
-  }
-
-  // Create destination directory if it doesn't exist
-  if (!fs.existsSync(destDir)) {
-    log(colors.yellow, '○', `Creating destination directory: ${destDir}`);
-    try {
-      fs.mkdirSync(destDir, { recursive: true });
-    } catch (err) {
-      log(colors.red, '✗', `Failed to create destination directory: ${err.message}`);
-      process.exit(1);
-    }
-  }
-
   // Counter for tracking
   let successCount = 0;
   let failCount = 0;
   let skipCount = 0;
 
-  console.log(`${colors.blue}Syncing agents...${colors.reset}\n`);
+  function syncFiles(label, srcDir, dstDir, files) {
+    console.log(`${colors.blue}Syncing ${label}...${colors.reset}\n`);
 
-  // Copy whitelisted agents
-  for (const agent of whitelist) {
-    const sourceFile = path.join(sourceDir, agent);
-    const destFile = path.join(destDir, agent);
-
-    if (!fs.existsSync(sourceFile)) {
-      log(colors.red, '✗', `${agent} (source not found)`);
-      failCount++;
-      continue;
+    if (!fs.existsSync(srcDir) || !fs.statSync(srcDir).isDirectory()) {
+      log(colors.red, '✗', `Source directory '${srcDir}' not found`);
+      failCount += files.length;
+      return;
     }
 
-    // Check if destination exists and compare
-    if (fs.existsSync(destFile)) {
-      if (fileContentEquals(sourceFile, destFile)) {
-        log(colors.yellow, '○', `${agent} (already up to date)`);
-        skipCount++;
-        continue;
+    if (!fs.existsSync(dstDir)) {
+      log(colors.yellow, '○', `Creating destination directory: ${dstDir}`);
+      try {
+        fs.mkdirSync(dstDir, { recursive: true });
+      } catch (err) {
+        log(colors.red, '✗', `Failed to create destination directory: ${err.message}`);
+        failCount += files.length;
+        return;
       }
     }
 
-    // Copy the file
-    try {
-      fs.copyFileSync(sourceFile, destFile);
-      log(colors.green, '✓', agent);
-      successCount++;
-    } catch (err) {
-      log(colors.red, '✗', `${agent} (copy failed: ${err.message})`);
-      failCount++;
+    for (const file of files) {
+      const sourceFile = path.join(srcDir, file);
+      const destFile = path.join(dstDir, file);
+
+      if (!fs.existsSync(sourceFile)) {
+        log(colors.red, '✗', `${file} (source not found)`);
+        failCount++;
+        continue;
+      }
+
+      if (fs.existsSync(destFile) && fileContentEquals(sourceFile, destFile)) {
+        log(colors.yellow, '○', `${file} (already up to date)`);
+        skipCount++;
+        continue;
+      }
+
+      try {
+        fs.copyFileSync(sourceFile, destFile);
+        log(colors.green, '✓', file);
+        successCount++;
+      } catch (err) {
+        log(colors.red, '✗', `${file} (copy failed: ${err.message})`);
+        failCount++;
+      }
     }
+
+    console.log('');
+  }
+
+  syncFiles('agents', sourceDir, destDir, whitelist);
+
+  // Sync commands if configured
+  if (config.commands) {
+    const cmdSrcDir = expandPath(config.commands.source);
+    const cmdDstDir = expandPath(config.commands.destination);
+    const cmdWhitelist = config.commands.whitelist || [];
+
+    const resolvedCmdSrc = path.isAbsolute(cmdSrcDir)
+      ? cmdSrcDir
+      : path.resolve(path.dirname(configFile), cmdSrcDir);
+
+    console.log(`  Commands source:      ${resolvedCmdSrc}`);
+    console.log(`  Commands destination: ${cmdDstDir}`);
+    console.log(`  Commands:            ${cmdWhitelist.length} whitelisted\n`);
+
+    syncFiles('commands', resolvedCmdSrc, cmdDstDir, cmdWhitelist);
   }
 
   // Summary
-  console.log(`\n${colors.blue}=== Summary ===${colors.reset}`);
-  console.log(`${colors.green}Synced:${colors.reset}    ${successCount} agent(s)`);
-  console.log(`${colors.yellow}Skipped:${colors.reset}   ${skipCount} agent(s) (up to date)`);
+  console.log(`${colors.blue}=== Summary ===${colors.reset}`);
+  console.log(`${colors.green}Synced:${colors.reset}    ${successCount} file(s)`);
+  console.log(`${colors.yellow}Skipped:${colors.reset}   ${skipCount} file(s) (up to date)`);
   if (failCount > 0) {
-    console.log(`${colors.red}Failed:${colors.reset}    ${failCount} agent(s)`);
+    console.log(`${colors.red}Failed:${colors.reset}    ${failCount} file(s)`);
     process.exit(1);
   }
 
-  console.log(`\n${colors.green}All agents synced successfully!${colors.reset}`);
+  console.log(`\n${colors.green}All files synced successfully!${colors.reset}`);
   process.exit(0);
 }
 
