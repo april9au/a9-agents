@@ -5,7 +5,8 @@
     "source": "./commands",
     "destination": "~/.claude/commands",
     "whitelist": [
-      "speckit.transform.md"
+      "speckit.transform.md",
+      "speckit.brd-review.md"
     ]
   },
   "whitelist": [
@@ -45,6 +46,7 @@
     "seo-meta-optimizer.md",
     "seo-structure-architect.md",
     "seo-content-writer.md",
-    "stack9-developer.md"
+    "stack9-developer.md",
+    "stack9-brd-reviewer.md"
   ]
 }
