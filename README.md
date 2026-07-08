@@ -427,6 +427,7 @@ Only commands listed in the `commands.whitelist` array in `agents-config.json` a
 ```
 agents/                      # All agent definitions from upstream
 commands/                    # Slash command definitions (e.g. speckit.*)
+shared/                      # Canonical content inlined into agents/commands at sync time
 mcps/                        # MCP configuration files
 tools/                       # Optional Claude Code tools
 workflows/                   # Example multi-agent workflows
@@ -436,6 +437,16 @@ agents-config.json           # Organization-wide agent and command whitelist
 sync-agents.js              # Agent and command sync script
 install-mcps.js             # MCP installation script
 ```
+
+### Shared Includes
+
+Agent and command files may reference canonical shared content with an include directive:
+
+```markdown
+{{include:shared/spec-writing-principles.md}}
+```
+
+`sync-agents.js` expands the directive at sync time, so the files installed under `~/.claude` are fully self-contained. Content that must stay identical across multiple agents/commands (e.g. April9's Spec Writing Principles, used by both `stack9-brd-reviewer` and `/speckit.brd-review`) lives once in `shared/` — edit it there, then re-run the sync. Includes are single-level: a `shared/` file cannot itself contain an include directive.
 
 ## Contributing
 
