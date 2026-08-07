@@ -7,8 +7,23 @@
 ### I. Spec File Audience Separation (NON-NEGOTIABLE)
 Every spec file MUST declare its audience at the top using a feature-type banner: `[Portal Feature]` for client-facing features; `[Back-office Feature]` for system administrator features (or equivalent labels for the project). Client-facing user stories and admin configuration stories MUST NOT appear in the same spec file.
 
-### II. Verb-Led User Story Titles (NON-NEGOTIABLE)
+### II. Verb-Led, Direct User Story Titles (NON-NEGOTIABLE)
 All user story headings MUST begin with a gerund verb (e.g. "Viewing…", "Setting Up…", "Preventing…"). Noun-phrase titles (e.g. "Report Menu Configuration", "Access Inheritance") are not permitted and must be rewritten.
+
+A gerund alone is not enough. The title MUST also be **short and direct** — the shortest phrase that names what the persona achieves. All four tests MUST pass:
+
+1. **No subordinate clause.** A title MUST NOT contain "That…", "Which…", "Whether…", "So That…", "For One…", or any other clause explaining or qualifying the object. Explanation belongs in the story narrative, never the heading.
+2. **Eight words maximum**, including the gerund and excluding the `User Story N -` prefix and the priority suffix.
+3. **No vague qualifiers.** "One Particular", "A Different", "Some", "Certain" MUST be replaced by the concrete noun they stand in for, or dropped.
+4. **Names the outcome, not the act of verifying it.** "Checking That…", "Confirming That…", "Ensuring That…" describe testing the feature; the title MUST state what the feature does for the persona instead. Acceptance scenarios are where verification lives.
+
+Long, hedged, or explanatory gerund titles are the common near-miss — they satisfy the gerund rule and fail this principle:
+
+| Non-compliant (gerund, but indirect) | Compliant rewrite |
+|---|---|
+| Setting Up One Webhook That Covers Every Form | Applying One Webhook to Every Form |
+| Keeping a Different Destination for One Particular Form | Sending One Form's Submissions Elsewhere |
+| Checking That a Delivered Submission Says Which Form and Site It Came From | Identifying a Submission's Form and Site |
 
 ### III. Task-Oriented Language for All Personas
 User story titles and prose MUST be task-focused and readable regardless of audience. System-focused or technical titles must be rewritten as human tasks — administrators are users too. Example: "Record Synchronisation" → "Applying Changes in a Single Save".

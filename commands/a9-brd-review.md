@@ -51,7 +51,7 @@ Judge each principle **PASS / FAIL / N/A**. Judge against these principles — *
 
 Operational notes for the review:
 
-- **II / III:** flag every noun-phrase or system/technical title and provide a compliant, paste-ready rewrite.
+- **II / III:** flag every noun-phrase, system/technical, or wordy title and provide a compliant, paste-ready rewrite. Do not stop at the gerund test — run all four of II's directness tests on **every** story title (no subordinate clause, ≤8 words, no vague qualifiers, names the outcome not the act of verifying it). Gerund-led-but-explanatory titles such as "Checking That a Delivered Submission Says Which Form and Site It Came From" are the commonest near-miss and are a blocking FAIL on II, not a style nit. Tabulate every title with the test it failed (or PASS) and the short rewrite.
 - **IV:** run the 3-way classifier on every Edge Cases item (requirement / out of scope / genuine edge case) and flag any unresolved edge case or conflated section.
 - **VII:** flag ambiguous or dual-system personas for resolution before `/speckit.plan`.
 
@@ -77,10 +77,13 @@ Lifecycle position: optional review before /speckit.plan (run on request)
 ### I. Audience Separation — PASS/FAIL/N/A
 - <finding> (location: <section/heading/line>)
   Fix: <concrete action or rewrite>
-### II. Verb-Led Titles — …
-| Current title | Compliant rewrite |
-|---|---|
+### II. Verb-Led, Direct Titles — …
+| Current title | Test failed (or PASS) | Compliant rewrite |
+|---|---|---|
+| US1 (line 42) — Report Menu Configuration | not gerund-led | `### User Story 1 - Configuring the Report Menu (Priority: P1)` |
 … III–VII …
+
+Rewrites in the II table MUST be the complete SpecKit heading — the `### User Story N - ` prefix and `(Priority: PN)` suffix carried through unchanged — so the cell can be pasted straight over the old line without losing the story number or its priority. The eight-word ceiling counts only the title between them.
 
 ## Miscategorised scenarios (Principle IV)
 | Scenario | Currently in | Should be | Why |
