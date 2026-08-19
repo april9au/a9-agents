@@ -117,6 +117,24 @@ Agents are assigned to specific Claude models based on task complexity and compu
 | Sonnet | 16 | `frontend-developer`, `flutter-expert`, `typescript-pro`, `ui-ux-designer`, `devops-troubleshooter`, `deployment-engineer`, `dx-optimizer`, `test-automator`, `debugger`, `error-detective`, `api-documenter`, `tutorial-engineer`, `mermaid-expert`, `content-marketer`, `customer-support`, `seo-content-auditor`, `seo-content-writer` |
 | Opus | 11 | `backend-architect`, `cloud-architect`, `architect-reviewer`, `database-optimizer`, `incident-responder`, `code-reviewer`, `security-auditor`, `backend-security-coder`, `frontend-security-coder`, `performance-engineer`, `prompt-engineer`, `docs-architect` |
 
+## Commands
+
+Slash commands live one file per command in `commands/`, and are whitelisted in `agents-config.json` under the `commands` key.
+
+| Command | Description |
+|---------|-------------|
+| [/a9-task-intake](commands/a9-task-intake.md) | Turns one raw client ticket into an April9 task write-up plus a Fibonacci effort estimate, saved under `intake/<deal>/tasks/`. Run it inside the client's own repo so the write-up is checked against the real codebase. |
+| [/a9-proposal-generator](commands/a9-proposal-generator.md) | Rolls every ticket captured for a deal into CRM-ready proposal content, deliverables, and suggested Service Offers. |
+| [/a9-brd-review](commands/a9-brd-review.md) | Reviews a SpecKit `spec.md` against April9's Spec Writing Principles. |
+| [/a9-get-human-output](commands/a9-get-human-output.md) | Turns a suite of specs into a stakeholder one-pager. |
+| [/speckit.transform](commands/speckit.transform.md) | Transforms a feature specification into a structured `spec.json`. |
+
+April9's own commands use the `a9-` prefix. `/speckit.transform` is also an April9 command — it predates the convention and is retained under its original name. Every other `speckit.*` command referenced in these docs (`/speckit.specify`, `/speckit.plan`, `/speckit.clarify` and friends) belongs to upstream [spec-kit](https://github.com/github/spec-kit) and is not shipped here.
+
+The first two are a pair: run `/a9-task-intake` once per ticket, then `/a9-proposal-generator` once per deal.
+
+Command bodies can pull in shared content with `{{include:shared/file.md}}`, expanded at sync time so a single source of truth serves several commands.
+
 ## Installation
 
 Clone the repository and run the sync script:
@@ -126,11 +144,11 @@ Clone the repository and run the sync script:
 git clone https://github.com/@april9/a9-agents.git
 cd a9-agents
 
-# Sync whitelisted agents to ~/.claude/agents
+# Sync whitelisted agents and commands to ~/.claude
 node sync-agents.js
 ```
 
-That's it! The whitelisted agents from `agents-config.json` are now available in Claude Code.
+That's it! The whitelisted agents and commands from `agents-config.json` are now available in Claude Code.
 
 ### Updating Agents
 
@@ -411,6 +429,8 @@ A suite of commands for authoring and managing feature specifications through th
 | Command | Description |
 |---------|-------------|
 | `/speckit.transform` | Transform a `spec.md` into a structured `spec.json` following the canonical JSON schema |
+| `/a9-brd-review` | Review a `spec.md` against April9's Spec Writing Principles and emit a per-principle report |
+| `/a9-get-human-output` | Turn a suite of specs into a plain-language stakeholder one-pager |
 
 ### Installing Commands
 
@@ -426,7 +446,8 @@ Only commands listed in the `commands.whitelist` array in `agents-config.json` a
 
 ```
 agents/                      # All agent definitions from upstream
-commands/                    # Slash command definitions (e.g. speckit.*)
+commands/                    # Slash command definitions (April9's own use the a9- prefix)
+shared/                      # Canonical content inlined into agents/commands at sync time
 mcps/                        # MCP configuration files
 tools/                       # Optional Claude Code tools
 workflows/                   # Example multi-agent workflows
@@ -436,6 +457,16 @@ agents-config.json           # Organization-wide agent and command whitelist
 sync-agents.js              # Agent and command sync script
 install-mcps.js             # MCP installation script
 ```
+
+### Shared Includes
+
+Agent and command files may reference canonical shared content with an include directive:
+
+```markdown
+{{include:shared/spec-writing-principles.md}}
+```
+
+`sync-agents.js` expands the directive at sync time, so the files installed under `~/.claude` are fully self-contained. Content that must stay identical across multiple agents/commands (e.g. April9's Spec Writing Principles, used by both `stack9-brd-reviewer` and `/a9-brd-review`) lives once in `shared/` — edit it there, then re-run the sync. Includes are single-level: a `shared/` file cannot itself contain an include directive.
 
 ## Contributing
 
