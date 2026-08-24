@@ -12,6 +12,14 @@
       "a9-proposal-generator.md"
     ]
   },
+  "skills": {
+    "source": "./skills",
+    "destination": "~/.claude/skills"
+  },
+  "hooks": {
+    "source": "./hooks",
+    "destination": "~/.claude/hooks"
+  },
   "whitelist": [
     "backend-architect.md",
     "frontend-developer.md",
