@@ -28,8 +28,8 @@ import { useStack9 } from '@april9/stack9-react';
 import { S9Page, S9PageHeader, S9Table, S9Form, S9TextField, S9Button, S9Tabs } from '@april9/stack9-ui';
 
 // Generated types — run yarn generate-models first
-import { SupportTicketListOutputItem } from '../../models/my_app/SupportTicketList';
-import { SupportTicketDetailOutputItem } from '../../models/my_app/SupportTicketDetail';
+import { SupportTicketListOutputItem } from 'stack9-models';
+import { SupportTicketDetailOutputItem } from 'stack9-models';
 ```
 
 ## List view

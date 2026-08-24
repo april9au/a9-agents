@@ -55,8 +55,7 @@ For anything not covered by these references, query the `mcp__stack9-docs__vecto
 - Aggregations, dashboards, cross-entity reports → `stack9_db`
 
 **Never edit auto-generated files:**
-- `packages/stack9-stack/src/models/` — overwritten by `yarn generate-models`
-- `apps/stack9-frontend/src/models/` — overwritten by `yarn generate-models`
+- `packages/stack9-models/models/` — overwritten by `yarn generate-models` (run from the project root), shared between `stack9-stack` and `stack9-frontend` via the `stack9-models` workspace package
 
 **Run `yarn generate-models` before writing any frontend components** so generated types are available.
 
