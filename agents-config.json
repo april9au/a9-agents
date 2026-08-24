@@ -5,7 +5,11 @@
     "source": "./commands",
     "destination": "~/.claude/commands",
     "whitelist": [
-      "speckit.transform.md"
+      "speckit.transform.md",
+      "a9-brd-review.md",
+      "a9-get-human-output.md",
+      "a9-task-intake.md",
+      "a9-proposal-generator.md"
     ]
   },
   "skills": {
@@ -53,6 +57,7 @@
     "seo-meta-optimizer.md",
     "seo-structure-architect.md",
     "seo-content-writer.md",
-    "stack9-developer.md"
+    "stack9-developer.md",
+    "stack9-brd-reviewer.md"
   ]
 }

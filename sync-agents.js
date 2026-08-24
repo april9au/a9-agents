@@ -17,7 +17,33 @@ function log(color, symbol, message) {
   console.log(`${color}${symbol}${colors.reset} ${message}`);
 }
 
+/**
+ * Resolves the active Claude configuration directory, honouring the
+ * CLAUDE_CONFIG_DIR environment variable and falling back to ~/.claude.
+ */
+function claudeConfigDir() {
+  const configDir = process.env.CLAUDE_CONFIG_DIR;
+  if (configDir && configDir.trim() !== '') {
+    const trimmed = configDir.trim();
+    if (trimmed.startsWith('~/')) {
+      return path.join(os.homedir(), trimmed.slice(2));
+    }
+    return trimmed;
+  }
+  return path.join(os.homedir(), '.claude');
+}
+
+/**
+ * Expands leading ~ to the home directory and rewrites paths that target the
+ * default ~/.claude location so they follow CLAUDE_CONFIG_DIR when set.
+ */
 function expandPath(filePath) {
+  if (filePath.startsWith('~/.claude/')) {
+    return path.join(claudeConfigDir(), filePath.slice('~/.claude/'.length));
+  }
+  if (filePath === '~/.claude') {
+    return claudeConfigDir();
+  }
   if (filePath.startsWith('~/')) {
     return path.join(os.homedir(), filePath.slice(2));
   }
@@ -46,6 +72,33 @@ function fileContentEquals(file1, file2) {
     const content1 = fs.readFileSync(file1, 'utf8');
     const content2 = fs.readFileSync(file2, 'utf8');
     return content1 === content2;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * Expands {{include:relative/path.md}} directives with the referenced file's
+ * content, resolved relative to the repository root. Single level only —
+ * included files must not themselves contain include directives.
+ */
+function expandIncludes(content, repoRoot, sourceLabel) {
+  return content.replace(/\{\{include:([^}]+)\}\}/g, (_match, includePath) => {
+    const resolved = path.resolve(repoRoot, includePath.trim());
+    if (!fs.existsSync(resolved)) {
+      throw new Error(`include '${includePath.trim()}' not found (referenced from ${sourceLabel})`);
+    }
+    const included = fs.readFileSync(resolved, 'utf8');
+    if (/\{\{include:/.test(included)) {
+      throw new Error(`nested include in '${includePath.trim()}' is not supported (referenced from ${sourceLabel})`);
+    }
+    return included.trimEnd();
+  });
+}
+
+function destFileEquals(destFile, expandedContent) {
+  try {
+    return fs.readFileSync(destFile, 'utf8') === expandedContent;
   } catch (err) {
     return false;
   }
@@ -94,6 +147,8 @@ async function syncAgents() {
   console.log(`  Destination: ${destDir}`);
   console.log(`  Agents:      ${whitelist.length} whitelisted\n`);
 
+  const repoRoot = path.dirname(path.resolve(configFile));
+
   // Counter for tracking
   let successCount = 0;
   let failCount = 0;
@@ -129,14 +184,24 @@ async function syncAgents() {
         continue;
       }
 
-      if (fs.existsSync(destFile) && fileContentEquals(sourceFile, destFile)) {
+      let expandedContent;
+      try {
+        const rawContent = fs.readFileSync(sourceFile, 'utf8');
+        expandedContent = expandIncludes(rawContent, repoRoot, file);
+      } catch (err) {
+        log(colors.red, '✗', `${file} (${err.message})`);
+        failCount++;
+        continue;
+      }
+
+      if (fs.existsSync(destFile) && destFileEquals(destFile, expandedContent)) {
         log(colors.yellow, '○', `${file} (already up to date)`);
         skipCount++;
         continue;
       }
 
       try {
-        fs.copyFileSync(sourceFile, destFile);
+        fs.writeFileSync(destFile, expandedContent);
         log(colors.green, '✓', file);
         successCount++;
       } catch (err) {
