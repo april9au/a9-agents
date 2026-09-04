@@ -53,6 +53,11 @@ the agent you are waiting on, mark it `running` in the status block, and write *
 report, summary or sign-off until its findings are in your hands and you have acted on them. A run
 that reads as finished while an agent is still going has mis-reported itself.
 
+**You cannot avoid yielding while an agent works — so control what you say when you do.** There is
+nothing for you to do while it thinks, and the harness brings you back when it returns. The defect is
+never the yield; it is a yield dressed as a conclusion. **One line naming what you are waiting on, and
+nothing else.**
+
 **Do not stop at a draft, and do not end a turn holding an unfired gate.** *"Here is the brief, run the
 gate when you like"* is not an outcome; neither is handing the gate's findings to the user to action.
 
@@ -64,10 +69,20 @@ and what would unblock it.
 **One thing happens after issue and never blocks it:** step 8 offers the enrolment queue to the master
 lists. The brief is already out; a *no*, or no answer at all, leaves the queue exactly where it is.
 
-**Keep the phase visible.** `decisions.md` opens with a `## Run status` block — the steps as a
-checklist, each ticked line carrying the count that proves it, and the current phase marked. **Update it
-at every phase transition and show it to the user in the same breath**, so where the run is up to never
-has to be asked for. Schema in [`references/decision-record.md`](references/decision-record.md).
+**Keep the phase visible — on disk, not in the terminal.** `decisions.md` opens with a `## Run status`
+block: the steps as a checklist, each ticked line carrying the count that proves it, the current phase
+marked. **Update it at every phase transition.** Schema in
+[`references/decision-record.md`](references/decision-record.md).
+
+**You print only twice: when you start waiting on an agent, and at the conclusion.** A printed update
+at every transition is what makes a run look like it finished four times — in the user's terminal each
+one *is* a message that ends your turn. The block on disk is the tracker; the terminal is not.
+
+**The waiting line has a shape that cannot read as a wrap-up.** One line: the phase, the agent, and
+what you are waiting for. No file list, no counts, no *"so far"*, no summary of the work, nothing that
+invites the user to think you are done.
+
+> `Phase 7 of 8 · waiting on a9-specs-gate to return its findings.`
 
 **The block is a cursor, not the state.** The record's **open entries** are what a resumed run trusts —
 the block is rewritten rather than appended, so a session killed mid-write leaves it stale with no
