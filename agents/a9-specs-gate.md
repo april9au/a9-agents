@@ -40,6 +40,13 @@ Plus the brief you are checking. **Nothing else.** You do not open the codebase:
 in the record precisely so the set stays at three, and a gate that re-derives them has become a second
 author.
 
+**You have Read, Grep and Glob, and no Bash — deliberately.** Bash is how a gate ends up running the
+codebase or re-deriving what recon already reported, and the source set is closed precisely to stop
+that. **Exact-text `Grep` is the intended instrument for M1**: a verbatim copy is a literal string
+match, so searching a master bullet and counting the files it appears in *is* the check. Use it that
+way and say nothing about the tools you do not have — the absence is the design, not a shortfall to
+report.
+
 ## Run order: M1–M4, then stop if anything fired
 
 Mechanical items first. **If any M fires, report and stop — do not run the J items.**
@@ -80,6 +87,10 @@ guidance. It is deliberately not yours.
 
 **Any open entry in the decision record.** That is the authoring rule with nothing added: an
 unanswered question blocks its deliverable, a release-wide one blocks the brief.
+
+**The record's `## Run status` block is not an entry.** It is the author's phase cursor — a checklist of
+the run's steps, sitting above the `### Q` / `### R` entries. **Unticked boxes are not open questions**,
+nothing about it blocks, and it is not a rubric item. There is still no M5.
 
 ## Two tolerances — not defects
 
