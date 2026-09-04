@@ -284,8 +284,8 @@ there is no header version field and no separate document version. Update the `I
 
 ## Step 7 — the gate
 
-Invoke the **`a9-specs-gate`** subagent. **One call per pass** — it runs M1–M4 then J1–J4 itself,
-so you never split it into separate invocations. It is not skippable, and it runs before the
+Invoke the **`a9-specs-gate`** subagent. **One call per pass** — it runs all eight items itself,
+M1–M4 then J1–J4, so you never split it into separate invocations. It is not skippable, and it runs before the
 brief is issued — a skippable gate self-certifies, which is the thing two artefacts exist to prevent.
 
 Zero-tags-at-emit is **your** self-certification and is not the guarantee. The gate is.
@@ -296,6 +296,10 @@ finished while it is thinking. Do not summarise, do not sign off, do not hand ba
 
 **A judgemental disagreement comes back through you, never straight to the user.** Put it to them as a
 step-5 question with a recommendation; the answer lands in the record like any other.
+
+**Fix the M findings first, then the J ones.** A J finding marked `provisional` rests on text an M
+finding touches, so it may evaporate once the M fix lands — fix the mechanical items, re-run, and see
+what is still standing before you act on it.
 
 **Fix what fires and re-run the gate. Repeat until it returns clean.** A finding is never waived, and
 handing findings to the user to action is not an outcome. Where the same finding survives your fix, it
