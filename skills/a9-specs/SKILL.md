@@ -22,6 +22,58 @@ Where a fact is missing you **ask**. You do not assume it, infer it, or fill in 
 value. The full test, the tagging mechanic and the drafting rules are in
 [`references/drafting-rules.md`](references/drafting-rules.md) — read it before you draft.
 
+## The run is one unit
+
+The seven steps below are **one invocation**. It ends in one of two normal places — the brief
+**issued** with a clean gate, or the whole brief **blocked** and you say so — and it never ends at a
+draft. The only other stop is the one already stated above: an input that cannot be written without
+changing the locked template, or a repo whose master lists cannot be reached or scaffolded. Both are
+hard failures you report; neither is a finished run.
+
+**Yielding is not finishing.** Step 5 asks one question at a time and waits — that ends your turn, and
+it is meant to. Tell the two states apart:
+
+| | What is true | What happens next |
+|---|---|---|
+| **Yield** | A question is outstanding; the record has **open** entries | The user answers; step 0's `Resume` row picks the queue back up |
+| **Conclude** | The gate returned clean and the set is written | You report, and stop |
+
+Three things must be true before you conclude, every time:
+
+- **Recon's findings are in the record for this brief** — step 2, unconditional on a first run, over the
+  amend surface on a re-issue. A resumed session inherits run one's findings; it does not re-fire recon.
+- **No open entries remain in the record** — every question answered, or its deliverable named as
+  blocked and dropped.
+- **`a9-specs-gate` returned clean** — step 7, after however many fix-and-re-run cycles that takes.
+
+**A subagent still running means the run is still running.** `a9-specs-recon` and `a9-specs-gate` are
+invoked as agents, and control may come back to you — or to the user — while one is still working.
+**That is not the end of anything.** You are *waiting*, and waiting is a phase, not a conclusion: name
+the agent you are waiting on, mark it `running` in the status block, and write **no** completion
+report, summary or sign-off until its findings are in your hands and you have acted on them. A run
+that reads as finished while an agent is still going has mis-reported itself.
+
+**Do not stop at a draft, and do not end a turn holding an unfired gate.** *"Here is the brief, run the
+gate when you like"* is not an outcome; neither is handing the gate's findings to the user to action.
+
+**A blocked deliverable does not end the run.** It blocks *itself* — the other deliverables issue, so
+the gate still runs, and it checks that the dropped one is named with its reason. Only a **release-wide**
+block, where nothing can issue, ends a run without a gate pass: report it as blocked, with the reason
+and what would unblock it.
+
+**One thing happens after issue and never blocks it:** step 8 offers the enrolment queue to the master
+lists. The brief is already out; a *no*, or no answer at all, leaves the queue exactly where it is.
+
+**Keep the phase visible.** `decisions.md` opens with a `## Run status` block — the steps as a
+checklist, each ticked line carrying the count that proves it, and the current phase marked. **Update it
+at every phase transition and show it to the user in the same breath**, so where the run is up to never
+has to be asked for. Schema in [`references/decision-record.md`](references/decision-record.md).
+
+**The block is a cursor, not the state.** The record's **open entries** are what a resumed run trusts —
+the block is rewritten rather than appended, so a session killed mid-write leaves it stale with no
+history behind it. During step 5 the question's own `n of m` remainder carries the progress; do not
+reprint the checklist between questions.
+
 ## What you produce
 
 The brief is a **file set**, not one document:
@@ -80,7 +132,7 @@ one.
 | What you find | What this is | What you do |
 |---|---|---|
 | Folder absent | **First run** | Step 1. |
-| `decisions.md` has **open** entries | **Resume** — a previous session stopped mid-round | Continue the question queue from the record. Do **not** re-read and re-tag the input. |
+| `decisions.md` has **open** entries | **Resume** — a previous session stopped mid-round | Continue the question queue from the record. Do **not** re-read and re-tag the input. The `Run status` block says which phase stopped; where the two disagree, the **entries** are the truth. |
 | No open entries, **any** `NN-<slug>.md` exists | **Re-issue** | Step 6. |
 
 ## Step 1 — read the input yourself
@@ -106,7 +158,8 @@ asserted a 31-day cutoff and the running system did 30 days from last update; no
 looked unsourced, so nothing would have tagged it. Only comparing the input against a picture of
 current behaviour makes a confident-but-wrong claim visible.
 
-Give it the domain terms the input names. It returns findings — what it established, what came back
+Give it the domain terms the input names. **Then wait for it** — drafting before its findings land is
+drafting against the input alone, which is the one thing this step exists to prevent. It returns findings — what it established, what came back
 `not found`, and any **contradiction** with the input. **A contradiction overrides the input**, and it
 becomes a question for the user, not a silent correction. File every finding in the record.
 
@@ -142,8 +195,9 @@ release-wide exclusion binds one deliverable rather than five **removes it from 
 genuinely arguable, it is a step-5 question; the conservative reading keeps it binding.
 
 A term or persona that is not on the list is **never coined in passing**. Ask the user; their answer
-makes it confirmed source; then `propose` it so the list's owner can enrol it. **You never write to a
-master list.**
+makes it confirmed source; then `propose` it. **A run in progress never writes to a master list** — the
+queue is applied at issue (step 8), on the user's yes. `find` returns queued entries in the meantime,
+so a term enrolled by an earlier run is never asked for twice.
 
 ## Step 4 — draft, tagging as you go
 
@@ -192,7 +246,8 @@ to cut to, so it blocks the whole brief. **Never park a question in the brief**:
 placeholder, no open-questions section. It lives in the record. **A dropped deliverable is reported to
 the user, never silently omitted.**
 
-Emit when **zero tags remain**, or the deliverable is blocked.
+Emit when **zero tags remain**, or the deliverable is blocked. **Emit means go to step 7** —
+the draft is not the deliverable, and the run is not over.
 
 ## Step 6 — re-issue: amend, never regenerate
 
@@ -211,6 +266,12 @@ Every entry already names its target, so there is nothing to compute — and a t
   files, so any change to one moves a row.
 - A deliverable that was **blocked** and now has its answer is purely additive: a new file and a new
   table row, nothing else moves. It belongs in *this* brief, because the input that contained it was this release's.
+- **A master entry that has changed since the last issue joins the surface.** A master edit generates
+  no record entry, so the surface computed from the record misses it: re-resolve every copied entry
+  through the contract and pull in any file whose copy has drifted. A changed definition is a
+  commitment moving, so it bumps the **minor** digit on each deliverable that carries it. **Issued text
+  is never rewritten out of band** — a client approved it, so it moves at the next re-issue and not
+  before.
 - **Recon re-runs over the surface only.** Run one's findings stay as the baseline it compares against.
   Do not re-run everything: after the first brief was implemented the system has moved *towards* it, so
   a full re-run surfaces contradictions that mean only "we built it" and would drag untouched
@@ -223,12 +284,34 @@ there is no header version field and no separate document version. Update the `I
 
 ## Step 7 — the gate
 
-Invoke the **`a9-specs-gate`** subagent. Once. It is not skippable, and it runs before the
+Invoke the **`a9-specs-gate`** subagent. **One call per pass** — it runs M1–M4 then J1–J4 itself,
+so you never split it into separate invocations. It is not skippable, and it runs before the
 brief is issued — a skippable gate self-certifies, which is the thing two artefacts exist to prevent.
 
 Zero-tags-at-emit is **your** self-certification and is not the guarantee. The gate is.
 
+**Wait for its verdict.** The gate is a subagent and it takes minutes; nothing about the run is
+finished while it is thinking. Do not summarise, do not sign off, do not hand back — mark it
+`running` and stop there until the findings arrive.
+
 **A judgemental disagreement comes back through you, never straight to the user.** Put it to them as a
 step-5 question with a recommendation; the answer lands in the record like any other.
 
-Fix what fires, re-run the gate, then issue.
+**Fix what fires and re-run the gate. Repeat until it returns clean.** A finding is never waived, and
+handing findings to the user to action is not an outcome. Where the same finding survives your fix, it
+is a judgemental disagreement: put it to the user as a step-5 question with a recommendation, then fix
+and re-run again.
+
+**A clean gate is what ends the run.** Issue the set, then report — the files written, the questions
+asked, the gate's verdict, and any deliverable dropped or blocked.
+
+## Step 8 — apply the enrolment queue
+
+After the set is issued, report the entries this run queued and ask **once** whether to apply them to
+the master lists. On a yes, call `apply()` through the read contract. On a no — or no answer — they
+stay queued, `find` keeps returning them, and no later run re-asks. Where the run queued nothing, say
+nothing.
+
+**This never blocks issue.** The brief is out before the question is asked, and the write is
+**byte-neutral**: the master ends up holding exactly the text already copied into the deliverable
+files, so no file in the brief changes and the gate would read it the same.

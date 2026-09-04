@@ -18,6 +18,51 @@ It is three things at once, and that is why it earns its keep:
 are files. Neither is copied here. The volatile sources are the user's answers and recon's findings —
 so those, and only those, are what the record holds.
 
+## The `## Run status` block
+
+The record opens with it. It is the run's phase cursor — what makes *where is this up to?* answerable
+without reading the file, and what the author prints to the user at every phase transition.
+
+```markdown
+## Run status — run 1 · first run
+
+- [x] 0 · orient — no folder present, so first run
+- [x] 1 · input read — 5 deliverables identified
+- [x] 2 · recon — 4 findings, 1 contradiction (raised as Q5)
+- [x] 3 · vocabulary + release context — 13 terms, 1 persona, 2 proposed
+- [x] 4 · draft — 5 files written, 9 tags open
+- [x] 5 · clarification round — 7 of 7 answered
+- [ ] 6 · amend — n/a, first run
+- [ ] 7 · gate — **running**, a9-specs-gate ← here
+- [ ] issued
+- [ ] 8 · enrolment — 2 queued, offered after issue
+```
+
+**A phase waiting on a subagent is marked `running`, with the agent named.** The block has to tell
+*not started* apart from *in flight* — a run whose gate is still thinking is not a run that skipped
+its gate, and it is not a finished run either.
+
+**Every ticked line carries the count that proves it.** A bare tick says only that something was
+claimed; `recon — 4 findings, 1 contradiction` says what came back, and that is what makes the block
+worth printing.
+
+**On a re-issue it names the amend surface.** That is the *where am I* fact on an amend, because every
+file outside the surface must stay byte-for-byte identical.
+
+```markdown
+## Run status — run 2 · re-issue
+**Amend surface:** `00-executive-summary.md`, `02-deals-board-visibility-prioritisation.md`
+```
+
+**It is the one part of the record that is rewritten rather than appended**, and it shows the
+**current run only**. The entries are the history; the block is only the cursor over them. A top-level
+`## Run status` heading against the `### Q3` / `### R2` entry shape is what keeps the two
+unmistakable.
+
+**It is not an entry, and nothing blocks on it.** An unticked box is not an open question. A resumed
+run reads the **open entries** as truth and the block as a convenience — a session killed mid-write
+leaves the block stale.
+
 ## Three entry classes
 
 ### Open question
@@ -54,6 +99,20 @@ whole of the amend mechanism — no diff of the text is needed to know which fil
 dissolve several tags at once. A record that pairs only Q with A will make the next run re-ask
 questions this run had already made unnecessary.
 
+### The enrolment offer
+
+Step 8's question is a user answer like any other, so it is an **answered entry**, targeted
+release-wide. Without it the status block is the only trace — and the block is rewritten each run, so
+a later run cannot tell *never asked* from *asked and declined*, and will offer again.
+
+```markdown
+### Q7 — answered
+- **Run:** 1
+- **Target:** release-wide
+- **Question:** Apply the 4 entries this run queued to the master lists?
+- **Answer:** Yes — applied and cleared from the queue.
+```
+
 ### Recon finding
 
 ```markdown
@@ -77,7 +136,8 @@ by entries stamped with the current run are the deliverable files that get redra
 file in the set stays byte-for-byte identical — an unmodified file, which `git status` will confirm.
 
 The record is **appended to** — never versioned into a second file, never superseded. History is the
-point.
+point. The `## Run status` block is the one exception, and it is not history: it is the cursor, and it
+is rewritten in place.
 
 ## What the gate does with it
 
@@ -85,5 +145,8 @@ The record is one of the gate's three sources (input + master lists + record). T
 
 - **The gate's block condition is simply "any open entry."** That is the authoring rule with nothing
   added — an unanswered question blocks its deliverable, a release-wide one blocks the brief.
+- **The gate ignores the `## Run status` block.** It is not an entry, so unticked boxes are not open
+  questions and nothing about it can block. It is not a rubric item either — the rubric stays M1–M4,
+  J1–J4.
 - **The gate reads recon findings; it never re-runs recon.** A gate that re-derives has become a second
   author. Findings live here precisely so the source set stays at three.
