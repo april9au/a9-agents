@@ -199,29 +199,6 @@ when it has something to say stays a signal.
 blocks in the file — a reader scans them for an entry rather than reading them through — so they are
 shaped alike and shaped for scanning.>
 
-**Assumptions**
-
-- `<every assumption that binds this deliverable, copied verbatim from the master in the executive
-  summary's `Release Context`. Omit the whole element when nothing binds this deliverable.>`
-
-<**This element is copy-only.** Every bullet is a verbatim bullet of the master's `Release Context`
-`**Assumptions**`, so a change to the master is followed here and the two must never diverge — and an
-assumption written here that is not in the master has no master to change. Where an assumption holds
-for this deliverable and no other, the master still carries it once and this file still carries the
-copy: the master holds everything, the files hold what binds them.
-
-`**Out of scope:**` below is the one element that mixes — the deliverable's own exclusions, which are
-in no master, alongside copies of the release-wide ones, which must match theirs exactly.
-
-**Assumptions, not rules.** What must hold for this deliverable to be built as described — a
-platform's behaviour, a dependency, something outside April9's control, something still to be
-confirmed with its confirmer named. A rule that *governs* the behaviour is
-`Notes / Constraints`; behaviour itself is a story.
-
-This element exists rather than folding into `Notes / Constraints` for the reason the glossary
-exists: `Notes` is the one block with no structural limit on its length, and an assumption buried
-in a paragraph of constraints is findable only by reading the paragraph.>
-
 **Today** `<the problem, from the persona's side: what it costs them now>`. **We're building**
 `<the change itself, in functional terms>` **so that** `<the outcome that closes the problem>`.
 `<A third sentence if something needs saying that the three clauses cannot carry — a threshold
@@ -297,8 +274,9 @@ sentences>`
 - `<one exclusion per bullet: this deliverable's own, plus each release-wide one copied verbatim from
   the master, in one list and unmarked>`
 
-<The boundary closes the file. By the time a reader reaches it they know what the change is, so
-these two lines answer the question they now have.
+<By the time a reader reaches the boundary they know what the change is, so these two lines answer
+the question they now have. They close the *change*: everything below them qualifies what was
+described rather than adding to it.
 
 **One list, not two.** A reader asking "what does this not cover" does not care whether an exclusion
 was written for this deliverable or for the release — they care what is excluded. So the copied
@@ -316,3 +294,33 @@ converge — leave the line thin rather than manufacture a distinction.
 
 **Copies are verbatim.** A release-wide exclusion reworded on the way in has drifted from the master,
 which is the one defect this shape can produce and the gate checks for it.>
+
+**Assumptions**
+
+- `<every assumption that binds this deliverable, copied verbatim from the master in the executive
+  summary's `Release Context`. Omit the whole element when nothing binds this deliverable.>`
+
+<**This element closes the file, and its position is the point.** An assumption is what had to hold
+for everything above it to be true, so it reads as a closing qualification rather than a precondition
+a reader carries through the stories. The two blocks a reader looks *up* — `Personas` and `Glossary` —
+sit at the top, where they are hit before the prose that uses them; this one is read after the thing
+it qualifies. It also puts the two elements that copy down from `Release Context` — this and
+`**Out of scope:**` — beside each other at the end.
+
+**This element is copy-only.** Every bullet is a verbatim bullet of the master's `Release Context`
+`**Assumptions**`, so a change to the master is followed here and the two must never diverge — and an
+assumption written here that is not in the master has no master to change. Where an assumption holds
+for this deliverable and no other, the master still carries it once and this file still carries the
+copy: the master holds everything, the files hold what binds them.
+
+`**Out of scope:**` above is the one element that mixes — the deliverable's own exclusions, which are
+in no master, alongside copies of the release-wide ones, which must match theirs exactly.
+
+**Assumptions, not rules.** What must hold for this deliverable to be built as described — a
+platform's behaviour, a dependency, something outside April9's control, something still to be
+confirmed with its confirmer named. A rule that *governs* the behaviour is
+`Notes / Constraints`; behaviour itself is a story.
+
+This element exists rather than folding into `Notes / Constraints` for the reason the glossary
+exists: `Notes` is the one block with no structural limit on its length, and an assumption buried
+in a paragraph of constraints is findable only by reading the paragraph.>
