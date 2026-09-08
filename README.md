@@ -125,8 +125,6 @@ Slash commands live one file per command in `commands/`, and are whitelisted in 
 |---------|-------------|
 | [/a9-task-intake](commands/a9-task-intake.md) | Turns one raw client ticket into an April9 task write-up plus a Fibonacci effort estimate, saved under `intake/<deal>/tasks/`. Run it inside the client's own repo so the write-up is checked against the real codebase. |
 | [/a9-proposal-generator](commands/a9-proposal-generator.md) | Rolls every ticket captured for a deal into CRM-ready proposal content, deliverables, and suggested Service Offers. |
-| [/a9-brd-review](commands/a9-brd-review.md) | Reviews a SpecKit `spec.md` against April9's Spec Writing Principles. |
-| [/a9-get-human-output](commands/a9-get-human-output.md) | Turns a suite of specs into a stakeholder one-pager. |
 | [/speckit.transform](commands/speckit.transform.md) | Transforms a feature specification into a structured `spec.json`. |
 
 April9's own commands use the `a9-` prefix. `/speckit.transform` is also an April9 command — it predates the convention and is retained under its original name. Every other `speckit.*` command referenced in these docs (`/speckit.specify`, `/speckit.plan`, `/speckit.clarify` and friends) belongs to upstream [spec-kit](https://github.com/github/spec-kit) and is not shipped here.
@@ -429,8 +427,6 @@ A suite of commands for authoring and managing feature specifications through th
 | Command | Description |
 |---------|-------------|
 | `/speckit.transform` | Transform a `spec.md` into a structured `spec.json` following the canonical JSON schema |
-| `/a9-brd-review` | Review a `spec.md` against April9's Spec Writing Principles and emit a per-principle report |
-| `/a9-get-human-output` | Turn a suite of specs into a plain-language stakeholder one-pager |
 
 ### Installing Commands
 
@@ -463,10 +459,10 @@ install-mcps.js             # MCP installation script
 Agent and command files may reference canonical shared content with an include directive:
 
 ```markdown
-{{include:shared/spec-writing-principles.md}}
+{{include:shared/my-shared-content.md}}
 ```
 
-`sync-agents.js` expands the directive at sync time, so the files installed under `~/.claude` are fully self-contained. Content that must stay identical across multiple agents/commands (e.g. April9's Spec Writing Principles, used by both `stack9-brd-reviewer` and `/a9-brd-review`) lives once in `shared/` — edit it there, then re-run the sync. Includes are single-level: a `shared/` file cannot itself contain an include directive.
+`sync-agents.js` expands the directive at sync time, so the files installed under `~/.claude` are fully self-contained. Content that must stay identical across multiple agents/commands lives once in `shared/` — create the file there, then re-run the sync. The directory currently holds nothing; add it when a second consumer for some content appears. Includes are single-level: a `shared/` file cannot itself contain an include directive.
 
 ## Contributing
 
